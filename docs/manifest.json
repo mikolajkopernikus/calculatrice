@@ -2,7 +2,7 @@
   "name": "Calculatrice Mobile",
   "short_name": "Calculatrice",
   "description": "Calculatrice simple avec les 4 opérations",
-  "start_url": "/",
+  "start_url": "/calculatrice/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196F3",
@@ -22,3 +22,4 @@
     }
   ]
 }
+
