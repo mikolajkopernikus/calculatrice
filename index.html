@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculatrice mobile simple">
+    <meta name="theme-color" content="#2196F3">
+    <title>Calculatrice</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        
+        <!-- Calculatrice avec parenthèses -->
+        <div class="buttons">
+            <button class="btn btn-special" onclick='appendParenthesis("(")'>(</button>
+            <button class="btn btn-special" onclick='appendParenthesis(")")'  >)</button>
+            <button class="btn btn-special" onclick="calculateSquareRoot()">√</button>
+            <button class="btn btn-special" onclick="calculatePercentage()">%</button>
+            
+            <button class="btn btn-clear" onclick="clearDisplay()">C</button>
+            <button class="btn btn-delete" onclick="deleteChar()">⌫</button>
+            <button class="btn btn-operator" onclick="appendOperator('/')">/</button>
+            <button class="btn btn-operator" onclick="appendOperator('*')">×</button>
+            
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn btn-operator" onclick="appendOperator('-')">-</button>
+            
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn btn-operator" onclick="appendOperator('+')">+</button>
+            
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn btn-equals" onclick="calculate()" style="grid-row: span 2">=</button>
+            
+            <button class="btn" onclick="appendNumber('0')" style="grid-column: span 2">0</button>
+            <button class="btn btn-decimal" onclick="appendNumber('.')">.</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Enregistrer le Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker enregistré'))
+                .catch(err => console.log('Erreur Service Worker:', err));
+        }
+    </script>
+</body>
+</html>
