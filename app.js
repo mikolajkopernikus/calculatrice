@@ -6,8 +6,22 @@ let shouldResetDisplay = false;
 let expressionMode = false; // Mode expression libre pour parenthèses
 
 function updateDisplay() {
-    // Afficher toujours currentValue, remplacer * par × pour l'affichage
-    display.textContent = currentValue.replace(/\*/g, '×');
+    // Afficher toujours currentValue, traiter ** pour l'exposant avant de remplacer *
+    let displayText = currentValue;
+    
+    // Remplacer ** par notation en exposant HTML (style LaTeX)
+    // Capturer soit un nombre, soit une expression entre parenthèses
+    displayText = displayText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
+    
+    // Gérer le cas où ** n'est pas encore suivi d'un nombre ou parenthèse
+    if (displayText.endsWith('**')) {
+        displayText = displayText.slice(0, -2) + '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">▯</sup>';
+    }
+    
+    // Remplacer * par × pour l'affichage (après traitement de **)
+    displayText = displayText.replace(/\*/g, '×');
+    
+    display.innerHTML = displayText;
 }
 
 function appendNumber(number) {
@@ -120,6 +134,16 @@ function calculatePercentage() {
     expressionMode = true;
     currentValue += '%';
     shouldResetDisplay = false;
+    updateDisplay();
+}
+
+function appendPower() {
+    // Ajouter l'opérateur puissance x^y
+    expressionMode = true;
+    if (currentValue === '0') {
+        currentValue = '';
+    }
+    currentValue += '**';
     updateDisplay();
 }
 

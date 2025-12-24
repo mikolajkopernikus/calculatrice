@@ -57,7 +57,7 @@ body {
 }
 
 .btn-decimal {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -93,6 +93,32 @@ body {
 
 .btn-equals:active {
     background: #1976D2;
+}
+
+.btn-power {
+    background: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.btn-power sup {
+    font-size: 1.4rem;
+}
+
+.btn-power-y {
+    background: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.btn-power-y sup {
+    font-size: 1rem;
+}
+
+.btn-power:active, .btn-power-y:active {
+    background: #bdbdbd;
 }
 
 .btn-clear {
