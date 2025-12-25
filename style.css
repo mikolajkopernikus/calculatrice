@@ -82,6 +82,22 @@ body {
     font-size: 1.8rem;
 }
 
+.btn-scientific {
+    background: #ffb74d;
+    color: #e65100;
+    font-weight: bold;
+    font-size: 1.3rem;
+    padding: 12px;
+}
+
+.btn-scientific sup {
+    font-size: 0.8rem;
+}
+
+.btn-scientific:active {
+    background: #ffa726;
+}
+
 .btn-special:active {
     background: #64b5f6;
 }

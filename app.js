@@ -73,8 +73,20 @@ function calculate() {
         // Regex pour capturer nombre (entier ou décimal) suivi de %
         expression = expression.replace(/(\d+\.?\d*)%/g, '($1/100)');
         
+        // Remplacer 'e' par Math.E et 'π' par Math.PI pour le calcul
+        expression = expression.replace(/\be\b/g, Math.E);
+        expression = expression.replace(/π/g, Math.PI);
+        
+        // Remplacer les fonctions mathématiques
+        expression = expression.replace(/ln\(/g, 'Math.log(');
+        expression = expression.replace(/sin\(/g, 'Math.sin(');
+        expression = expression.replace(/cos\(/g, 'Math.cos(');
+        expression = expression.replace(/tan\(/g, 'Math.tan(');
+        expression = expression.replace(/atan\(/g, 'Math.atan(');
+        expression = expression.replace(/asin\(/g, 'Math.asin(');
+        
         let result = eval(expression);
-        currentValue = Math.round(result * 100000000) / 100000000;
+        currentValue = Math.round(result * 1000000000000000) / 1000000000000000;
         currentValue = currentValue.toString();
         
         // Afficher l'expression dans la zone d'historique
@@ -158,7 +170,26 @@ function appendPower() {
     currentValue += '**';
     updateDisplay();
 }
+function appendFunction(func) {
+    // Ajouter une fonction mathématique (ln, sin, atan)
+    expressionMode = true;
+    if (currentValue === '0') {
+        currentValue = '';
+    }
+    currentValue += func + '(';
+    updateDisplay();
+}
 
+function appendConstant(constant) {
+    // Ajouter une constante mathématique (e)
+    expressionMode = true;
+    if (currentValue === '0') {
+        currentValue = constant;
+    } else {
+        currentValue += constant;
+    }
+    updateDisplay();
+}
 // Support clavier
 document.addEventListener('keydown', (e) => {
     if (e.key >= '0' && e.key <= '9') {

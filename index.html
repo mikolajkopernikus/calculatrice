@@ -18,6 +18,16 @@
         
         <!-- Calculatrice avec parenthèses -->
         <div class="buttons">
+            <button class="btn btn-scientific" onclick="appendFunction('ln')">ln</button>
+            <button class="btn btn-scientific" onclick="appendConstant('e')">e</button>
+            <button class="btn btn-scientific" onclick="appendFunction('sin')">sin</button>
+            <button class="btn btn-scientific" onclick="appendFunction('atan')">arctg</button>
+            
+            <button class="btn btn-scientific" onclick="appendConstant('π')">π</button>
+            <button class="btn btn-scientific" onclick="appendFunction('cos')">cos</button>
+            <button class="btn btn-scientific" onclick="appendFunction('tan')">tg</button>
+            <button class="btn btn-scientific" onclick="appendFunction('asin')">sin<sup>-1</sup></button>
+            
             <button class="btn btn-special" onclick='appendParenthesis("(")'>(</button>
             <button class="btn btn-special" onclick='appendParenthesis(")")'  >)</button>
             <button class="btn btn-special" onclick="calculateSquareRoot()">√</button>
