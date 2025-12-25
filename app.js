@@ -63,6 +63,9 @@ function appendOperator(op) {
 
 function calculate() {
     try {
+        // Sauvegarder l'expression actuelle pour l'historique
+        let displayExpression = currentValue;
+        
         // Remplacer × par * et traiter les pourcentages
         let expression = currentValue.replace(/×/g, '*').replace(/\s+/g, '');
         
@@ -73,6 +76,14 @@ function calculate() {
         let result = eval(expression);
         currentValue = Math.round(result * 100000000) / 100000000;
         currentValue = currentValue.toString();
+        
+        // Afficher l'expression dans la zone d'historique
+        let history = document.getElementById('history');
+        let historyText = displayExpression;
+        // Appliquer le même formatage que l'affichage principal
+        historyText = historyText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
+        historyText = historyText.replace(/\*/g, '×');
+        history.innerHTML = historyText;
     } catch (e) {
         currentValue = 'Erreur';
     }
@@ -90,6 +101,7 @@ function clearDisplay() {
     operation = null;
     shouldResetDisplay = false;
     expressionMode = false;
+    document.getElementById('history').innerHTML = '';
     updateDisplay();
 }
 
