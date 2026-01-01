@@ -368,4 +368,45 @@ document.addEventListener('paste', (e) => {
     }
 });
 
+// Support du collage sur mobile via appui long
+let longPressTimer;
+display.addEventListener('touchstart', (e) => {
+    longPressTimer = setTimeout(async () => {
+        // Appui long détecté - tenter de lire le presse-papiers
+        try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    // Réinitialiser si erreur ou indéfini affiché
+                    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
+                        currentValue = '0';
+                        document.getElementById('history').innerHTML = '';
+                        shouldResetDisplay = false;
+                        expressionMode = false;
+                    }
+                    
+                    expressionMode = true;
+                    if (currentValue === '0') {
+                        currentValue = text;
+                    } else {
+                        currentValue += text;
+                    }
+                    updateDisplay();
+                }
+            }
+        } catch (err) {
+            // Permission refusée ou non supporté
+            console.log('Impossible de lire le presse-papiers');
+        }
+    }, 500); // 500ms pour l'appui long
+});
+
+display.addEventListener('touchend', () => {
+    clearTimeout(longPressTimer);
+});
+
+display.addEventListener('touchmove', () => {
+    clearTimeout(longPressTimer);
+});
+
 updateDisplay();
