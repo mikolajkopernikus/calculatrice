@@ -37,10 +37,14 @@ body {
     justify-content: flex-end;
 }
 
+.history-grey {
+    background: #808080 !important;
+}
+
 .display {
-    background: #2196F3;
+    background: #000000;
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     padding: 30px 20px;
     text-align: right;
     word-wrap: break-word;

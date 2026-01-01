@@ -25,6 +25,14 @@ function updateDisplay() {
 }
 
 function appendNumber(number) {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     if (shouldResetDisplay && !expressionMode) {
         currentValue = number;
         shouldResetDisplay = false;
@@ -39,6 +47,14 @@ function appendNumber(number) {
 }
 
 function appendOperator(op) {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     if (expressionMode) {
         // En mode expression, ajouter l'opérateur directement
         currentValue += op;
@@ -66,6 +82,25 @@ function calculate() {
         // Sauvegarder l'expression actuelle pour l'historique
         let displayExpression = currentValue;
         
+        // Ajouter les parenthèses fermantes manquantes
+        let openParens = (currentValue.match(/\(/g) || []).length;
+        let closeParens = (currentValue.match(/\)/g) || []).length;
+        let missingParens = openParens - closeParens;
+        if (missingParens > 0) {
+            currentValue += ')'.repeat(missingParens);
+            displayExpression = currentValue;
+        }
+        
+        // Afficher l'expression dans la zone d'historique AVANT le calcul
+        let history = document.getElementById('history');
+        // S'assurer que le fond est violet (retirer la classe grey si présente)
+        history.classList.remove('history-grey');
+        let historyText = displayExpression;
+        // Appliquer le même formatage que l'affichage principal
+        historyText = historyText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
+        historyText = historyText.replace(/\*/g, '×');
+        history.innerHTML = historyText;
+        
         // Remplacer × par * et traiter les pourcentages
         let expression = currentValue.replace(/×/g, '*').replace(/\s+/g, '');
         
@@ -77,25 +112,24 @@ function calculate() {
         expression = expression.replace(/\be\b/g, Math.E);
         expression = expression.replace(/π/g, Math.PI);
         
-        // Remplacer les fonctions mathématiques
-        expression = expression.replace(/ln\(/g, 'Math.log(');
-        expression = expression.replace(/sin\(/g, 'Math.sin(');
-        expression = expression.replace(/cos\(/g, 'Math.cos(');
-        expression = expression.replace(/tan\(/g, 'Math.tan(');
-        expression = expression.replace(/atan\(/g, 'Math.atan(');
+        // Normaliser les noms de fonctions (arcsin -> asin, arctg -> atan)
+        expression = expression.replace(/arcsin\(/g, 'asin(');
+        expression = expression.replace(/arctg\(/g, 'atan(');
+        
+        // Remplacer √ par Math.sqrt AVANT les autres fonctions
+        expression = expression.replace(/√\(/g, 'Math.sqrt(');
+        
+        // Remplacer les fonctions mathématiques (ordre important: asin avant sin, atan avant tan)
         expression = expression.replace(/asin\(/g, 'Math.asin(');
+        expression = expression.replace(/atan\(/g, 'Math.atan(');
+        expression = expression.replace(/ln\(/g, 'Math.log(');
+        expression = expression.replace(/(?<!a)sin\(/g, 'Math.sin(');  // Ne pas remplacer asin déjà traité
+        expression = expression.replace(/cos\(/g, 'Math.cos(');
+        expression = expression.replace(/(?<!a)tan\(/g, 'Math.tan(');  // Ne pas remplacer atan déjà traité
         
         let result = eval(expression);
         currentValue = Math.round(result * 1000000000000000) / 1000000000000000;
         currentValue = currentValue.toString();
-        
-        // Afficher l'expression dans la zone d'historique
-        let history = document.getElementById('history');
-        let historyText = displayExpression;
-        // Appliquer le même formatage que l'affichage principal
-        historyText = historyText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
-        historyText = historyText.replace(/\*/g, '×');
-        history.innerHTML = historyText;
     } catch (e) {
         currentValue = 'Erreur';
     }
@@ -108,12 +142,26 @@ function calculate() {
 }
 
 function clearDisplay() {
+    let history = document.getElementById('history');
+    
+    // Vérifier si la zone d'historique a du contenu
+    if (history.innerHTML !== '') {
+        // Vérifier si le fond est gris
+        if (history.classList.contains('history-grey')) {
+            // Si déjà gris, effacer et repasser en violet
+            history.innerHTML = '';
+            history.classList.remove('history-grey');
+        } else {
+            // Si violet, passer en gris sans effacer
+            history.classList.add('history-grey');
+        }
+    }
+    
     currentValue = '0';
     previousValue = '';
     operation = null;
     shouldResetDisplay = false;
     expressionMode = false;
-    document.getElementById('history').innerHTML = '';
     updateDisplay();
 }
 
@@ -127,6 +175,14 @@ function deleteChar() {
 }
 
 function appendParenthesis(paren) {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     // Activer le mode expression
     expressionMode = true;
     
@@ -142,14 +198,20 @@ function appendParenthesis(paren) {
 }
 
 function calculateSquareRoot() {
-    const value = parseFloat(currentValue);
-    if (isNaN(value) || value < 0) {
-        currentValue = 'Erreur';
-    } else {
-        currentValue = Math.sqrt(value).toString();
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
     }
-    operation = null;
-    shouldResetDisplay = true;
+    
+    // Ajouter la fonction racine carrée
+    expressionMode = true;
+    if (currentValue === '0') {
+        currentValue = '';
+    }
+    currentValue += '√(';
     updateDisplay();
 }
 
@@ -162,6 +224,14 @@ function calculatePercentage() {
 }
 
 function appendPower() {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     // Ajouter l'opérateur puissance x^y
     expressionMode = true;
     if (currentValue === '0') {
@@ -171,6 +241,14 @@ function appendPower() {
     updateDisplay();
 }
 function appendFunction(func) {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     // Ajouter une fonction mathématique (ln, sin, atan)
     expressionMode = true;
     if (currentValue === '0') {
@@ -181,6 +259,14 @@ function appendFunction(func) {
 }
 
 function appendConstant(constant) {
+    // Réinitialiser si erreur affichée
+    if (currentValue === 'Erreur') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
     // Ajouter une constante mathématique (e)
     expressionMode = true;
     if (currentValue === '0') {
@@ -196,6 +282,16 @@ document.addEventListener('keydown', (e) => {
         appendNumber(e.key);
     } else if (e.key === '.') {
         appendNumber('.');
+    } else if (e.key === ' ') {
+        e.preventDefault(); // Empêcher le comportement par défaut
+        // Ajouter un espace seulement dans l'expression
+        expressionMode = true;
+        if (currentValue === '0') {
+            currentValue = ' ';
+        } else {
+            currentValue += ' ';
+        }
+        updateDisplay();
     } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
         appendOperator(e.key);
     } else if (e.key === 'Enter' || e.key === '=') {
