@@ -1,9 +1,10 @@
-const CACHE_NAME = 'calculatrice-final-v4';
+const CACHE_NAME = 'calculatrice-final-v5';
 const urlsToCache = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
+  '/math.min.js',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'

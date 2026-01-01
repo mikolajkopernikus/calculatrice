@@ -18,24 +18,24 @@
         
         <!-- Calculatrice avec parenthèses -->
         <div class="buttons">
-            <button class="btn btn-scientific" onclick="appendFunction('ln')">ln</button>
-            <button class="btn btn-scientific" onclick="appendFunction('cos')">cos</button>
-            <button class="btn btn-scientific" onclick="appendFunction('sin')">sin</button>
-            <button class="btn btn-scientific" onclick="appendFunction('tan')">tg</button>
+            <button class="btn btn-scientific-light" onclick="appendFunction('ln')">ln</button>
+            <button class="btn btn-scientific-light" onclick="appendFunction('cos')">cos</button>
+            <button class="btn btn-scientific-light" onclick="appendFunction('sin')">sin</button>
+            <button class="btn btn-scientific-light" onclick="appendFunction('tan')">tg</button>
             
             <button class="btn btn-scientific" onclick="appendConstant('e')">e</button>
             <button class="btn btn-scientific" onclick="appendConstant('π')">π</button>
-            <button class="btn btn-scientific" onclick="appendFunction('asin')">arcsin</button>
-            <button class="btn btn-scientific" onclick="appendFunction('atan')">arctg</button>
+            <button class="btn btn-scientific" onclick="appendFunction('asin')">asin</button>
+            <button class="btn btn-scientific" onclick="appendFunction('atan')">atg</button>
             
-            <button class="btn btn-special" onclick='appendParenthesis("(")'>(</button>
-            <button class="btn btn-special" onclick='appendParenthesis(")")'  >)</button>
-            <button class="btn btn-special" onclick="calculateSquareRoot()">√</button>
-            <button class="btn btn-special" onclick="calculatePercentage()">%</button>
+            <button class="btn btn-power btn-reduced-height" onclick="appendPower()">x<sup>■</sup></button>
+            <button class="btn btn-power btn-reduced-height" onclick="calculateSquareRoot()"><span style="font-weight: 900;">√</span><span style="text-decoration: overline;">x</span></button>
+            <button class="btn btn-special btn-reduced-height" onclick='appendParenthesis("(")'>(</button>
+            <button class="btn btn-special btn-reduced-height" onclick='appendParenthesis(")")'  >)</button>
             
             <button class="btn btn-clear" onclick="clearDisplay()">C</button>
             <button class="btn btn-delete" onclick="deleteChar()">⌫</button>
-            <button class="btn btn-power" onclick="appendPower()">x<sup>■</sup></button>
+            <button class="btn btn-operator" onclick="calculatePercentage()">%</button>
             <button class="btn btn-operator" onclick="appendOperator('/')">÷</button>
             
             <button class="btn" onclick="appendNumber('7')">7</button>
@@ -54,11 +54,13 @@
             <button class="btn btn-operator" onclick="appendOperator('+')">+</button>
             
             <button class="btn" onclick="appendNumber('0')">0</button>
-            <button class="btn btn-decimal" onclick="appendNumber('.')">●</button>
-            <button class="btn btn-equals" onclick="calculate()" style="grid-column: span 2">=</button>
+            <button class="btn btn-decimal" onclick="appendNumber('.')">,</button>
+            <button class="btn btn-constant-i" onclick="appendConstant('i')">i</button>
+            <button class="btn btn-equals" onclick="calculate()">=</button>
         </div>
     </div>
 
+    <script src="math.min.js"></script>
     <script src="app.js"></script>
     <script>
         // Enregistrer le Service Worker

@@ -25,8 +25,8 @@ function updateDisplay() {
 }
 
 function appendNumber(number) {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -47,8 +47,8 @@ function appendNumber(number) {
 }
 
 function appendOperator(op) {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -108,28 +108,63 @@ function calculate() {
         // Regex pour capturer nombre (entier ou décimal) suivi de %
         expression = expression.replace(/(\d+\.?\d*)%/g, '($1/100)');
         
-        // Remplacer 'e' par Math.E et 'π' par Math.PI pour le calcul
-        expression = expression.replace(/\be\b/g, Math.E);
-        expression = expression.replace(/π/g, Math.PI);
+        // Utiliser math.js pour tous les calculs (gère réels et complexes)
+        // Math.js comprend 'e' et 'pi' nativement, on convertit juste π en pi
+        expression = expression.replace(/π/g, 'pi');
+        // Math.js utilise ^ pour la puissance, pas **
+        expression = expression.replace(/\*\*/g, '^');
+        // Remplacer √ par sqrt pour math.js
+        expression = expression.replace(/√\(/g, 'sqrt(');
         
-        // Normaliser les noms de fonctions (arcsin -> asin, arctg -> atan)
-        expression = expression.replace(/arcsin\(/g, 'asin(');
-        expression = expression.replace(/arctg\(/g, 'atan(');
+        // Normaliser les noms de fonctions pour math.js
+        expression = expression.replace(/ln\(/g, 'log(');
+        expression = expression.replace(/atg\(/g, 'atan(');
         
-        // Remplacer √ par Math.sqrt AVANT les autres fonctions
-        expression = expression.replace(/√\(/g, 'Math.sqrt(');
-        
-        // Remplacer les fonctions mathématiques (ordre important: asin avant sin, atan avant tan)
-        expression = expression.replace(/asin\(/g, 'Math.asin(');
-        expression = expression.replace(/atan\(/g, 'Math.atan(');
-        expression = expression.replace(/ln\(/g, 'Math.log(');
-        expression = expression.replace(/(?<!a)sin\(/g, 'Math.sin(');  // Ne pas remplacer asin déjà traité
-        expression = expression.replace(/cos\(/g, 'Math.cos(');
-        expression = expression.replace(/(?<!a)tan\(/g, 'Math.tan(');  // Ne pas remplacer atan déjà traité
-        
-        let result = eval(expression);
-        currentValue = Math.round(result * 1000000000000000) / 1000000000000000;
-        currentValue = currentValue.toString();
+        try {
+            let result = math.evaluate(expression);
+            
+            // Formater le résultat
+            if (typeof result === 'object' && result.re !== undefined && result.im !== undefined) {
+                // C'est un nombre complexe
+                let re = Math.round(result.re * 1000000000000000000) / 1000000000000000000;
+                let im = Math.round(result.im * 1000000000000000000) / 1000000000000000000;
+                
+                if (Math.abs(im) < 1e-10) {
+                    // Partie imaginaire négligeable
+                    currentValue = re.toString();
+                } else if (Math.abs(re) < 1e-10) {
+                    // Partie réelle négligeable
+                    if (Math.abs(im - 1) < 1e-10) {
+                        currentValue = 'i';
+                    } else if (Math.abs(im + 1) < 1e-10) {
+                        currentValue = '-i';
+                    } else {
+                        currentValue = im + 'i';
+                    }
+                } else {
+                    // Les deux parties sont présentes
+                    let sign = im >= 0 ? '+' : '';
+                    if (Math.abs(im - 1) < 1e-10) {
+                        currentValue = re + '+i';
+                    } else if (Math.abs(im + 1) < 1e-10) {
+                        currentValue = re + '-i';
+                    } else {
+                        currentValue = re + sign + im + 'i';
+                    }
+                }
+            } else if (typeof result === 'number') {
+                // Vérifier si le résultat est NaN
+                if (isNaN(result)) {
+                    currentValue = 'indéfini';
+                } else {
+                    currentValue = (Math.round(result * 1000000000000000000) / 1000000000000000000).toString();
+                }
+            } else {
+                currentValue = result.toString();
+            }
+        } catch (e) {
+            currentValue = 'Erreur';
+        }
     } catch (e) {
         currentValue = 'Erreur';
     }
@@ -175,8 +210,8 @@ function deleteChar() {
 }
 
 function appendParenthesis(paren) {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -198,8 +233,8 @@ function appendParenthesis(paren) {
 }
 
 function calculateSquareRoot() {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -224,8 +259,8 @@ function calculatePercentage() {
 }
 
 function appendPower() {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -241,8 +276,8 @@ function appendPower() {
     updateDisplay();
 }
 function appendFunction(func) {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
@@ -259,15 +294,15 @@ function appendFunction(func) {
 }
 
 function appendConstant(constant) {
-    // Réinitialiser si erreur affichée
-    if (currentValue === 'Erreur') {
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
         currentValue = '0';
         document.getElementById('history').innerHTML = '';
         shouldResetDisplay = false;
         expressionMode = false;
     }
     
-    // Ajouter une constante mathématique (e)
+    // Ajouter une constante mathématique (e, π, i)
     expressionMode = true;
     if (currentValue === '0') {
         currentValue = constant;
