@@ -317,6 +317,12 @@ document.addEventListener('keydown', (e) => {
         appendNumber(e.key);
     } else if (e.key === '.') {
         appendNumber('.');
+    } else if (e.key === '(') {
+        appendParenthesis('(');
+    } else if (e.key === ')') {
+        appendParenthesis(')');
+    } else if (e.key === 'i') {
+        appendConstant('i');
     } else if (e.key === ' ') {
         e.preventDefault(); // Empêcher le comportement par défaut
         // Ajouter un espace seulement dans l'expression
@@ -335,6 +341,30 @@ document.addEventListener('keydown', (e) => {
         clearDisplay();
     } else if (e.key === 'Backspace') {
         deleteChar();
+    }
+});
+
+// Support du collage (paste)
+document.addEventListener('paste', (e) => {
+    e.preventDefault();
+    let pastedText = e.clipboardData.getData('text');
+    
+    // Réinitialiser si erreur ou indéfini affiché
+    if (currentValue === 'Erreur' || currentValue === 'indéfini') {
+        currentValue = '0';
+        document.getElementById('history').innerHTML = '';
+        shouldResetDisplay = false;
+        expressionMode = false;
+    }
+    
+    if (pastedText) {
+        expressionMode = true;
+        if (currentValue === '0') {
+            currentValue = pastedText;
+        } else {
+            currentValue += pastedText;
+        }
+        updateDisplay();
     }
 });
 
