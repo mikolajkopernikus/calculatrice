@@ -1,7 +1,7 @@
 {
   "name": "Calculatrice Mobile",
   "short_name": "Calculatrice",
-  "description": "Calculatrice simple avec les 4 opérations",
+  "description": "Calculatrice nombres complexes et scientifique",
   "start_url": "/calculatrice/",
   "display": "standalone",
   "background_color": "#ffffff",
