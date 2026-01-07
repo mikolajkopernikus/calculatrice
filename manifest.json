@@ -25,9 +25,9 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/calculatrice_screen_shot.jpg",
+      "src": "screenshots/calculatrice_screen_shot.webp",
       "sizes": "1080x1920",
-      "type": "image/jpeg",
+      "type": "image/webp",
       "form_factor": "narrow"
     }
   ]
