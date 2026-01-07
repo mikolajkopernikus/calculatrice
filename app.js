@@ -6,19 +6,13 @@ let shouldResetDisplay = false;
 let expressionMode = false; // Mode expression libre pour parenthèses
 
 function updateDisplay() {
-    // Afficher toujours currentValue, traiter ** pour l'exposant avant de remplacer *
+    // Afficher currentValue avec formatage simple
     let displayText = currentValue;
     
-    // Remplacer ** par notation en exposant HTML (style LaTeX)
-    // Capturer soit un nombre, soit une expression entre parenthèses
-    displayText = displayText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
+    // Remplacer ** par ^ pour l'affichage de la puissance
+    displayText = displayText.replace(/\*\*/g, '^');
     
-    // Gérer le cas où ** n'est pas encore suivi d'un nombre ou parenthèse
-    if (displayText.endsWith('**')) {
-        displayText = displayText.slice(0, -2) + '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">▯</sup>';
-    }
-    
-    // Remplacer * par × pour l'affichage (après traitement de **)
+    // Remplacer * par × pour l'affichage de la multiplication
     displayText = displayText.replace(/\*/g, '×');
     
     display.innerHTML = displayText;
@@ -95,8 +89,8 @@ function calculate() {
         let history = document.getElementById('history');
         history.classList.remove('history-grey');
         let historyText = displayExpression;
-        // Appliquer le même formatage que l'affichage principal
-        historyText = historyText.replace(/\*\*(\([^)]*\)|[^+\-*/()]+)/g, '<sup style="font-size: 60%; position: relative; top: -0.9em; line-height: 0;">$1</sup>');
+        // Appliquer le même formatage simple que l'affichage principal
+        historyText = historyText.replace(/\*\*/g, '^');
         historyText = historyText.replace(/\*/g, '×');
         history.innerHTML = historyText;
         
