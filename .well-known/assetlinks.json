@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.mikolajkopernikus.twa",
+        "sha256_cert_fingerprints": ["48:DA:48:9C:C1:21:C8:49:FC:97:BD:F8:53:86:ED:A8:8E:A9:BE:D0:77:30:9B:40:99:C3:35:FB:52:F6:53:34"]
+      }
+    }]
