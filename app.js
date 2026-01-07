@@ -91,9 +91,8 @@ function calculate() {
             displayExpression = currentValue;
         }
         
-        // Afficher l'expression dans la zone d'historique AVANT le calcul
+        // Afficher l'expression dans l'historique AVANT le calcul (même si erreur)
         let history = document.getElementById('history');
-        // S'assurer que le fond est violet (retirer la classe grey si présente)
         history.classList.remove('history-grey');
         let historyText = displayExpression;
         // Appliquer le même formatage que l'affichage principal

@@ -135,7 +135,7 @@ body {
 }
 
 .btn-equals {
-    background: #2196F3;
+    background: #000000;
     color: white;
     font-weight: bold;
     font-size: 2.2rem;
@@ -150,7 +150,7 @@ body {
 }
 
 .btn-equals:active {
-    background: #1976D2;
+    background: #333333;
 }
 
 .btn-power {
